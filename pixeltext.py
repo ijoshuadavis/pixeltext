@@ -11,7 +11,7 @@
 # and compelling art from sources that already possess meaning as well as possibly
 # provide a new perspective on the text.
 #
-# Copyright�2008
+# Copyright2008
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,8 +35,7 @@ import math
 import random
 import datetime
 
-import Image
-import ImageDraw
+from PIL import Image, ImageDraw
 
 
 class PixelText:
@@ -48,6 +47,7 @@ class PixelText:
       
       
         # Create Content Dictionary
+        print("Creating Content Dictionary from",contentFile, "...")
         theContentFile = open(contentFile,"r")
 
         self.contentList = []
@@ -78,17 +78,18 @@ class PixelText:
             ###REFACTOR: Create regexp to speed up loading and content stripping
         
             if len(line) > 0:
-                self.contentList = self.contentList + line.split(" ")        
+                self.contentList = self.contentList + line.split(" ")
         
         # Create Base Map
         self.colorMap = {}
-	for word in self.contentList:
-	    self.colorMap[word] = ""
+        for word in self.contentList:
+            self.colorMap[word] = ""
+        print("Content Dictionary",contentFile, "created!")
         
         
-
     # ColorMap Methods        
     def exportColorMap(self, fileName):
+        print("Exporting ColorMap...")
         textUniqueWordList = {}
         for word in self.contentList:
             if word in textUniqueWordList:
@@ -99,41 +100,48 @@ class PixelText:
         theOutFile = open(fileName,"w")
         
         textSortedUniqueWordList = textUniqueWordList.keys()
-        textSortedUniqueWordList.sort()
+        sorted(textSortedUniqueWordList)
         
         for word in textSortedUniqueWordList:
         
             theOutFile.write (word + "," + self.colorMap[word] + "," + str(textUniqueWordList[word]) + "\n")    
  
         theOutFile.close()
+        print("ColorMap exported!")
         
         
-    
+    # importColorMap
     def importColorMap(self, fileName, backgroundColor):
+        print("Importing ColorMap...")
         self.theMapFile = csv.reader(open(fileName,"rb"))
         
         self.colorMap = {}
         for row in self.theMapFile:    
             if row[1] != "":
-        	self.colorMap[row[0]] = row[1]
+                self.colorMap[row[0]] = row[1]
             else:
-                self.colorMap[row[0]] = backgroundColor    
+                self.colorMap[row[0]] = backgroundColor
+        print("ColorMap imported!")
     
     def createColorMapRandom(self):
+        print("Creating Random ColorMap...")
         self.colorMap = {}
-	for word in self.contentList:
-    	    colorR = random.randint(0, 255)
-    	    colorG = random.randint(0, 255)
-    	    colorB = random.randint(0, 255)
-            self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB) 
+        for word in self.contentList:
+            colorR = random.randint(0, 255)
+            colorG = random.randint(0, 255)
+            colorB = random.randint(0, 255)
+            self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
+        print("Random ColorMap created!")
     
     def createColorMapRandomBW(self):
+        print("Creating Random B&W ColorMap...")
         self.colorMap = {}
-	for word in self.contentList:
+        for word in self.contentList:
     	    colorR = random.randint(0, 255)
     	    colorG = colorR
     	    colorB = colorR
-            self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB) 
+    	    self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
+        print("Random B&W ColorMap created!")
             
     def modifyWordColor(self, word, color):
         self.colorMap[word] = color
@@ -145,28 +153,30 @@ class PixelText:
     
     # Create Image    
     def createImage(self, fileName, backgroundColor, aspectWidth, aspectHeight):
+        print("Creating",fileName, aspectWidth, "x", aspectHeight, "...")
         sqrtContentLength = math.modf(math.sqrt(len(self.contentList)))
         
         if sqrtContentLength[0] < 0.5:
             imageSizeX = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
             imageSizeY = int(math.modf(math.sqrt(len(self.contentList)))[1])
+
         elif sqrtContentLength[0] > 0.5:
             imageSizeX = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
             imageSizeY = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
+
         else:
             imageSizeX = int(sqrtContentLength[1])
             imageSizeY = int(sqrtContentLength[1])
-        
-   
+
         imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)        
-    
+
         contentImage = Image.new( "RGB", imageSize, "#" + backgroundColor )
         contentImageDraw = ImageDraw.Draw(contentImage)
         
         i = 0
         j = 0
         for word in self.contentList:
-            imageCoordinates = 0, 1
+            #imageCoordinates = 0, 1
             
             try:
                 if( self.colorMap[word] != "" ):
@@ -174,11 +184,13 @@ class PixelText:
                 else:
                     contentImageDraw.point((i,j),"#" + backgroundColor)
             except:
-                contentImageDraw.point((i,j),"#" + backgroundColor)
+                contentImageDraw.point((i,j),"#800080")
             
             i = i + 1
-            if (i == imageSizeX * aspectWidth/aspectHeight):
+            if (i == int(imageSizeX * aspectWidth/aspectHeight)):
                 i = 0
                 j = j + 1
         
-        contentImage.save(fileName) 
+        contentImage.save(fileName)
+        print("PixelText", fileName, aspectWidth, "x", aspectHeight, "created!")
+        
