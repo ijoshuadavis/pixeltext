@@ -1,16 +1,31 @@
-# PixelText Utility
+# File: pixeltext.py
+# Purpose: Utility for development of PixelText images.
+# Author: Joshua L. Davis (josh@pixeltext.org)
+# Version: 0.1.2
+# Date Modified: 03/14/08
 #
 # PixelText is a content visualization concept to translate each unique word from 
 # the targeted text (e.g. books, lyrics, poems) to a color (specified or random)
 # and then display the word as a pixel in order as they appeared in the original
 # text. Simply put, translate these words to pixels. The hope is to create novel
 # and compelling art from sources that already possess meaning as well as possibly
-# provide a new perspective on the text.
+# provide a new perspective on the text.  http://www.pixeltext.org
 #
-# File: pixeltext.py
-# Author: Joshua L. Davis (josh@pixeltext.org)
-# Version: 0.1
-# Date Modified: 03/12/08
+# Copyright©2008 onesimpleidea (http://www.onesimpleidea.com)
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##################################################################################
 
 import sys
 import string
@@ -123,8 +138,9 @@ class PixelText:
     def modifyWordColor(self, word, color):
         self.colorMap[word] = color
 
-    #def clearColorMap(self):
-    #    self.colorMap = {}
+    def clearColorMap(self):
+        for word in self.contentList:
+            self.colorMap[word] = ""
     
     
     # Create Image    
@@ -165,13 +181,4 @@ class PixelText:
                 i = 0
                 j = j + 1
         
-        contentImage.save(fileName)    
-    
-    
-    
-    # Generic Utilities        
-    def printContent(self):
-        print self.contentList
-        
-    def printMap(self):
-        print self.colorMap        
+        contentImage.save(fileName) 
