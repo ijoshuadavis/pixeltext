@@ -7,12 +7,11 @@
 #
 # File: unittest.py
 # Purpose: Provide utility for development of PixelText images
-# Author: Joshua L. Davis (josh@pixeltext.org)
+# Author: Joshua L. Davis
 # Version: 0.1.2
 # Date Modified: 03/14/08
-# Project Website: http://www.pixeltext.org
 #
-# copyright©2008 onesimpleidea (http://www.onesimpleidea.com)
+# copyrightï¿½2008 
 ##################################################################################
 
 from pixeltext import *

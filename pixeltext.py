@@ -1,6 +1,6 @@
 # File: pixeltext.py
 # Purpose: Utility for development of PixelText images.
-# Author: Joshua L. Davis (josh@pixeltext.org)
+# Author: Joshua L. Davis
 # Version: 0.1.2
 # Date Modified: 03/14/08
 #
@@ -9,9 +9,9 @@
 # and then display the word as a pixel in order as they appeared in the original
 # text. Simply put, translate these words to pixels. The hope is to create novel
 # and compelling art from sources that already possess meaning as well as possibly
-# provide a new perspective on the text.  http://www.pixeltext.org
+# provide a new perspective on the text.
 #
-# Copyright©2008 onesimpleidea (http://www.onesimpleidea.com)
+# Copyrightï¿½2008
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
