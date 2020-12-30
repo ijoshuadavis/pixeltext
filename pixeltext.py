@@ -123,8 +123,8 @@ class PixelText:
     def modifyWordColor(self, word, color):
         self.colorMap[word] = color
 
-    def clearColorMap(self):
-        self.colorMap = {}
+    #def clearColorMap(self):
+    #    self.colorMap = {}
     
     
     # Create Image    
@@ -152,10 +152,14 @@ class PixelText:
         for word in self.contentList:
             imageCoordinates = 0, 1
             
-            if( self.colorMap[word] != "" ):
-                contentImageDraw.point((i,j),"#" + self.colorMap[word])
-            else:
+            try:
+                if( self.colorMap[word] != "" ):
+                    contentImageDraw.point((i,j),"#" + self.colorMap[word])
+                else:
+                    contentImageDraw.point((i,j),"#" + backgroundColor)
+            except:
                 contentImageDraw.point((i,j),"#" + backgroundColor)
+            
             i = i + 1
             if (i == imageSizeX * aspectWidth/aspectHeight):
                 i = 0
