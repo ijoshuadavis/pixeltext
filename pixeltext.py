@@ -34,6 +34,8 @@ import csv
 import math
 import random
 import datetime
+import re
+import itertools, sys
 
 from PIL import Image, ImageDraw
 
@@ -47,49 +49,58 @@ class PixelText:
       
       
         # Create Content Dictionary
-        print("Creating Content Dictionary from",contentFile, "...")
         theContentFile = open(contentFile,"r")
 
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        spinner_count = 0
+        sys.stdout.write("Creating Content Dictionary ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+            
         self.contentList = []
         for line in theContentFile.readlines():
-            line = line.replace(" - ", "")
-            line = line.replace("(", "")
-            line = line.replace(")", "")
-            line = line.replace("!", "")
-            line = line.replace("?", "")
-            line = line.replace(".", "")
-            line = line.replace(",", "")
-            line = line.replace(";", "")
-            line = line.replace(":", "")
-            line = line.replace("\"", "")
-            line = line.replace(":", "")
-            line = line.replace("  ", " ")
-            line = line.replace("  ", " ")
-            line = line.replace("  ", " ")
-            line = line.replace("  ", " ")
-            line = line.replace("  ", " ")            
-            line = line.lstrip()
-            line = line.rstrip()    
-            line = line.replace("\r", "")
-            line = line.replace("\n", "")
-            line = line.replace("\t", "")
             line = line.upper()
-            
-            ###REFACTOR: Create regexp to speed up loading and content stripping
-        
+            line = re.sub(r'[-\']', '', line) #remove to complete words/thoughts
+            line = re.sub(r'[\t\r\f\v\n\s,.:!@#$%^&*();?><"~`+_|\\\/=]', ' ', line) #remove whitespace and special chars
+            spinner_count = spinner_count + 1
+           
             if len(line) > 0:
-                self.contentList = self.contentList + line.split(" ")
+                self.contentList = self.contentList + line.split()
+
+            # Spinner Update
+            if spinner_count == 50:
+                sys.stdout.write(next(spinner))   # write the next character
+                sys.stdout.flush()                # flush stdout buffer (actual character display)
+                sys.stdout.write('\b')
+                spinner_count = 0
         
         # Create Base Map
         self.colorMap = {}
         for word in self.contentList:
             self.colorMap[word] = ""
-        print("Content Dictionary",contentFile, "created!")
+
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+            
+
         
-        
-    # ColorMap Methods        
+    ### ColorMap Methods        
     def exportColorMap(self, fileName):
-        print("Exporting ColorMap...")
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        spinner_count = 0
+
+        # Spinner Start
+        sys.stdout.write("Exporting ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+        
+        
         textUniqueWordList = {}
         for word in self.contentList:
             if word in textUniqueWordList:
@@ -103,45 +114,111 @@ class PixelText:
         sorted(textSortedUniqueWordList)
         
         for word in textSortedUniqueWordList:
-        
-            theOutFile.write (word + "," + self.colorMap[word] + "," + str(textUniqueWordList[word]) + "\n")    
+            theOutFile.write (word + "," + self.colorMap[word] + "," + str(textUniqueWordList[word]) + "\n")
+
+            # Spinner Update
+            if spinner_count == 50:
+                sys.stdout.write(next(spinner))   # write the next character
+                sys.stdout.flush()                # flush stdout buffer (actual character display)
+                sys.stdout.write('\b')
+                spinner_count = 0
  
         theOutFile.close()
-        print("ColorMap exported!")
+
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+            
+
         
-        
-    # importColorMap
+    ### importColorMap
     def importColorMap(self, fileName, backgroundColor):
-        print("Importing ColorMap...")
+
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Importing ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+        
         self.theMapFile = csv.reader(open(fileName,"rb"))
         
         self.colorMap = {}
-        for row in self.theMapFile:    
+        for row in self.theMapFile:
             if row[1] != "":
                 self.colorMap[row[0]] = row[1]
             else:
                 self.colorMap[row[0]] = backgroundColor
-        print("ColorMap imported!")
+
+            # Spinner Update
+            sys.stdout.write(next(spinner))   # write the next character
+            sys.stdout.flush()                # flush stdout buffer (actual character display)
+            sys.stdout.write('\b')
+
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
+
+
+        
     
     def createColorMapRandom(self):
-        print("Creating Random ColorMap...")
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating Random ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+
+
         self.colorMap = {}
         for word in self.contentList:
             colorR = random.randint(0, 255)
             colorG = random.randint(0, 255)
             colorB = random.randint(0, 255)
             self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
-        print("Random ColorMap created!")
+
+            # Spinner Update
+            sys.stdout.write(next(spinner))   # write the next character
+            sys.stdout.flush()                # flush stdout buffer (actual character display)
+            sys.stdout.write('\b')
+            
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
+
     
     def createColorMapRandomBW(self):
-        print("Creating Random B&W ColorMap...")
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating B&W Random ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+
         self.colorMap = {}
         for word in self.contentList:
     	    colorR = random.randint(0, 255)
     	    colorG = colorR
     	    colorB = colorR
     	    self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
-        print("Random B&W ColorMap created!")
+
+    	    # Spinner Update
+    	    sys.stdout.write(next(spinner))   # write the next character
+    	    sys.stdout.flush()                # flush stdout buffer (actual character display)
+    	    sys.stdout.write('\b')
+            
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
+
             
     def modifyWordColor(self, word, color):
         self.colorMap[word] = color
@@ -151,9 +228,16 @@ class PixelText:
             self.colorMap[word] = ""
     
     
-    # Create Image    
+    ### Create Image    
     def createImage(self, fileName, backgroundColor, aspectWidth, aspectHeight):
-        print("Creating",fileName, aspectWidth, "x", aspectHeight, "...")
+
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating PixelText %s " %fileName)
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b')
+        
         sqrtContentLength = math.modf(math.sqrt(len(self.contentList)))
         
         if sqrtContentLength[0] < 0.5:
@@ -190,7 +274,17 @@ class PixelText:
             if (i == int(imageSizeX * aspectWidth/aspectHeight)):
                 i = 0
                 j = j + 1
-        
+
+            # Spinner Update
+            sys.stdout.write(next(spinner))   # write the next character
+            sys.stdout.flush()                # flush stdout buffer (actual character display)
+            sys.stdout.write('\b')
+            
         contentImage.save(fileName)
-        print("PixelText", fileName, aspectWidth, "x", aspectHeight, "created!")
+
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
         
