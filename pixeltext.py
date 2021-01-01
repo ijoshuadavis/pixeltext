@@ -62,6 +62,7 @@ class PixelText:
         self.contentList = []
         for line in theContentFile.readlines():
             line = line.upper()
+            line = re.sub(r'[\d]', '', line) #remove numbers
             line = re.sub(r'[-\']', '', line) #remove to complete words/thoughts
             line = re.sub(r'[\t\r\f\v\n\s,.:!@#$%^&*();?><"~`+_|\\\/=]', ' ', line) #remove whitespace and special chars
             spinner_count = spinner_count + 1
