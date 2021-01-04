@@ -1,8 +1,8 @@
 # File: pixeltext.py
 # Purpose: Utility for development of PixelText images.
 # Author: Joshua L. Davis
-# Version: 0.1.2
-# Date Modified: 03/14/08
+# Version: 1.1
+# Date Modified: 01/01/2021
 #
 # PixelText is a content visualization concept to translate each unique word from 
 # the targeted text (e.g. books, lyrics, poems) to a color (specified or random)
@@ -11,7 +11,7 @@
 # and compelling art from sources that already possess meaning as well as possibly
 # provide a new perspective on the text.
 #
-# Copyright2008
+# Copyright©2021
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,19 +29,37 @@
 
 import sys
 import string
-
 import csv
 import math
 import random
 import datetime
 import re
-import itertools, sys
-
+import itertools
+import sys
 from PIL import Image, ImageDraw
 
 
 class PixelText:
 
+    ######################################################################################################################
+    ### Factory Methods
+    
+###TODO ADD STATIC SPINNER METHODS....
+    @staticmethod
+    def spinnerInit(self):
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        spinner_count = 0
+
+    @staticmethod    
+    def spinnerUpdate(self):
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        spinner_count = 0
+
+
+
+
+    ######################################################################################################################
+    ### Initialization 
     def __init__(self, contentFile):
         self.contentFile = contentFile
         
@@ -88,8 +106,73 @@ class PixelText:
         sys.stdout.flush()                # flush stdout buffer (actual character display)
             
 
+
+
+
+    ######################################################################################################################
+    ### Color Mapping Methods
+
+    ### createColorMapRandom #############################################################################################
+    def createColorMapRandom(self):
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating Random ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+
+
+        self.colorMap = {}
+        for word in self.contentList:
+            colorR = random.randint(0, 255)
+            colorG = random.randint(0, 255)
+            colorB = random.randint(0, 255)
+            self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
+
+            # Spinner Update
+            sys.stdout.write(next(spinner))   # write the next character
+            sys.stdout.flush()                # flush stdout buffer (actual character display)
+            sys.stdout.write('\b')
+            
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
         
-    ### ColorMap Methods        
+    ### createColorMapRandomBW - Create a Black and White Random Color Map ###############################################
+    def createColorMapRandomBW(self):
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating B&W Random ColorMap ")
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b') 
+
+        self.colorMap = {}
+        for word in self.contentList:
+    	    colorR = random.randint(0, 255)
+    	    colorG = colorR
+    	    colorB = colorR
+    	    self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
+
+    	    # Spinner Update
+    	    sys.stdout.write(next(spinner))   # write the next character
+    	    sys.stdout.flush()                # flush stdout buffer (actual character display)
+    	    sys.stdout.write('\b')
+            
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
+
+
+    ### modifyWordColor ##################################################################################################        
+    def modifyWordColor(self, word, color):
+        self.colorMap[word] = color
+        
+        
+    ### exportColorMap ###################################################################################################  
     def exportColorMap(self, fileName):
         # Spinner Setup
         spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
@@ -130,10 +213,9 @@ class PixelText:
         sys.stdout.write('\b')
         sys.stdout.write("...Done!\n")
         sys.stdout.flush()                # flush stdout buffer (actual character display)
-            
 
-        
-    ### importColorMap
+                
+    ### importColorMap ###################################################################################################
     def importColorMap(self, fileName, backgroundColor):
 
         # Spinner Setup
@@ -161,75 +243,21 @@ class PixelText:
         sys.stdout.write('\b')
         sys.stdout.write("...Done!\n")
         sys.stdout.flush()                # flush stdout buffer (actual character display)
-
-
-
         
-    
-    def createColorMapRandom(self):
-        # Spinner Setup
-        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
-        sys.stdout.write("Creating Random ColorMap ")
-        sys.stdout.write(next(spinner))   # write the next character
-        sys.stdout.flush()                # flush stdout buffer (actual character display)
-        sys.stdout.write('\b') 
 
-
-        self.colorMap = {}
-        for word in self.contentList:
-            colorR = random.randint(0, 255)
-            colorG = random.randint(0, 255)
-            colorB = random.randint(0, 255)
-            self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
-
-            # Spinner Update
-            sys.stdout.write(next(spinner))   # write the next character
-            sys.stdout.flush()                # flush stdout buffer (actual character display)
-            sys.stdout.write('\b')
-            
-        # Spinner Final
-        sys.stdout.write('\b')
-        sys.stdout.write("...Done!\n")
-        sys.stdout.flush()                # flush stdout buffer (actual character display)
-
-
-    
-    def createColorMapRandomBW(self):
-        # Spinner Setup
-        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
-        sys.stdout.write("Creating B&W Random ColorMap ")
-        sys.stdout.write(next(spinner))   # write the next character
-        sys.stdout.flush()                # flush stdout buffer (actual character display)
-        sys.stdout.write('\b') 
-
-        self.colorMap = {}
-        for word in self.contentList:
-    	    colorR = random.randint(0, 255)
-    	    colorG = colorR
-    	    colorB = colorR
-    	    self.colorMap[word] = "%02x%02x%02x" % (colorR, colorG, colorB)
-
-    	    # Spinner Update
-    	    sys.stdout.write(next(spinner))   # write the next character
-    	    sys.stdout.flush()                # flush stdout buffer (actual character display)
-    	    sys.stdout.write('\b')
-            
-        # Spinner Final
-        sys.stdout.write('\b')
-        sys.stdout.write("...Done!\n")
-        sys.stdout.flush()                # flush stdout buffer (actual character display)
-
-
-            
-    def modifyWordColor(self, word, color):
-        self.colorMap[word] = color
-
+    ### clearColorMap ####################################################################################################
     def clearColorMap(self):
         for word in self.contentList:
             self.colorMap[word] = ""
+
+
+
+
     
-    
-    ### Create Image    
+    ######################################################################################################################
+    ### Image Creation Methods
+            
+    ### createImage ######################################################################################################
     def createImage(self, fileName, backgroundColor, aspectWidth, aspectHeight):
 
         # Spinner Setup
@@ -253,16 +281,20 @@ class PixelText:
             imageSizeX = int(sqrtContentLength[1])
             imageSizeY = int(sqrtContentLength[1])
 
-        imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)        
+        if aspectWidth - aspectHeight == 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)
+        elif aspectWidth - aspectHeight > 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight) + 1, int(imageSizeY * aspectHeight/aspectWidth)
+        elif aspectWidth - aspectHeight < 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
 
         contentImage = Image.new( "RGB", imageSize, "#" + backgroundColor )
         contentImageDraw = ImageDraw.Draw(contentImage)
         
         i = 0
         j = 0
-        for word in self.contentList:
-            #imageCoordinates = 0, 1
-            
+
+        for word in self.contentList:     
             try:
                 if( self.colorMap[word] != "" ):
                     contentImageDraw.point((i,j),"#" + self.colorMap[word])
@@ -272,7 +304,7 @@ class PixelText:
                 contentImageDraw.point((i,j),"#800080")
             
             i = i + 1
-            if (i == int(imageSizeX * aspectWidth/aspectHeight)):
+            if (i == imageSize[0]):
                 i = 0
                 j = j + 1
 
@@ -280,7 +312,7 @@ class PixelText:
             sys.stdout.write(next(spinner))   # write the next character
             sys.stdout.flush()                # flush stdout buffer (actual character display)
             sys.stdout.write('\b')
-            
+
         contentImage.save(fileName)
 
         # Spinner Final
@@ -288,4 +320,121 @@ class PixelText:
         sys.stdout.write("...Done!\n")
         sys.stdout.flush()                # flush stdout buffer (actual character display)
 
+        print("Dimention: ", imageSize[0], " x ", imageSize[1], "Words: ", len(self.contentList), " >> ", imageSize[0] * imageSize[1], " = ",imageSize[0] * imageSize[1] -  len(self.contentList)," SQRT:", math.sqrt(len(self.contentList)))
+
+    ### createImageCircle - Instead of left to right placement of pixel, doing in circle #################################
+    def createImageCircle (self, fileName, backgroundColor, aspectWidth, aspectHeight):
+
+        # Spinner Setup
+        spinner = itertools.cycle(['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'])
+        sys.stdout.write("Creating PixelText %s " %fileName)
+        sys.stdout.write(next(spinner))   # write the next character
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+        sys.stdout.write('\b')
+
+        sqrtContentLength = math.modf(math.sqrt(len(self.contentList)))
         
+        if sqrtContentLength[0] < 0.5:
+            imageSizeX = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
+            imageSizeY = int(math.modf(math.sqrt(len(self.contentList)))[1])
+
+        elif sqrtContentLength[0] > 0.5:
+            imageSizeX = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
+            imageSizeY = int(math.modf(math.sqrt(len(self.contentList)))[1] + 1)
+
+        else:
+            imageSizeX = int(sqrtContentLength[1])
+            imageSizeY = int(sqrtContentLength[1])
+
+
+        if aspectWidth - aspectHeight == 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)
+        elif aspectWidth - aspectHeight > 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight) + 1, int(imageSizeY * aspectHeight/aspectWidth)
+        elif aspectWidth - aspectHeight < 0:
+            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
+
+        contentImage = Image.new( "RGB", imageSize, "#" + backgroundColor )
+        contentImageDraw = ImageDraw.Draw(contentImage)
+        
+        i = 0
+        j = 0
+        k = 0
+        l = 0
+        n = 0
+
+
+        if imageSize[0] * imageSize[1] - len(self.contentList) != 0:
+            n = imageSize[0] * imageSize[1] - len(self.contentList)
+            while n != 0:
+                if (l == 0): ## Draw to the right
+                    i = i + 1
+                    if (i == imageSize[0] - k - 1):
+                        l = 1
+                        
+                elif (l == 1): ## Draw to the down
+                    j = j + 1
+                    if (j == imageSize[1] - k - 1):
+                        l = 2
+                        
+                elif (l == 2): ## Draw to the left
+                    i = i - 1
+                    if (i == k):
+                        l = 3
+                        
+                elif (l == 3): ## Draw to the up
+                    j = j - 1
+                    if (j == k):
+                        i = i + 1
+                        j = j + 1
+                        k = k + 1
+                        l = 0
+                n = n - 1
+
+        
+
+        for word in self.contentList:      
+            try:
+                if( self.colorMap[word] != "" ):
+                    contentImageDraw.point((i,j),"#" + self.colorMap[word])
+                else:
+                    contentImageDraw.point((i,j),"#" + backgroundColor)
+            except:
+                contentImageDraw.point((i,j),"#800080")
+
+            if (l == 0): ## Draw to the right
+                i = i + 1
+                if (i == imageSize[0] - k - 1):
+                    l = 1
+                    
+            elif (l == 1): ## Draw to the down
+                j = j + 1
+                if (j == imageSize[1] - k - 1):
+                    l = 2
+                    
+            elif (l == 2): ## Draw to the left
+                i = i - 1
+                if (i == k):
+                    l = 3
+                    
+            elif (l == 3): ## Draw to the up
+                j = j - 1
+                if (j == k):
+                    i = i + 1
+                    j = j + 1
+                    k = k + 1
+                    l = 0
+
+            # Spinner Update
+            sys.stdout.write(next(spinner))   # write the next character
+            sys.stdout.flush()                # flush stdout buffer (actual character display)
+            sys.stdout.write('\b')
+
+        contentImage.save(fileName)
+
+        # Spinner Final
+        sys.stdout.write('\b')
+        sys.stdout.write("...Done!\n")
+        sys.stdout.flush()                # flush stdout buffer (actual character display)
+
+        print("Dimention: ", imageSize[0], " x ", imageSize[1], "Words: ", len(self.contentList), " >> ", imageSize[0] * imageSize[1], " = ",imageSize[0] * imageSize[1] -  len(self.contentList)," SQRT:", math.sqrt(len(self.contentList)))
