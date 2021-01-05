@@ -281,12 +281,12 @@ class PixelText:
             imageSizeX = int(sqrtContentLength[1])
             imageSizeY = int(sqrtContentLength[1])
 
-        if aspectWidth - aspectHeight == 0:
+        if imageSizeX - imageSizeY == 0:
             imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)
-        elif aspectWidth - aspectHeight > 0:
+        elif imageSizeX - imageSizeY > 0:
             imageSize = int(imageSizeX * aspectWidth/aspectHeight) + 1, int(imageSizeY * aspectHeight/aspectWidth)
-        elif aspectWidth - aspectHeight < 0:
-            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
+        elif imageSizeX - aspectHeight < 0:
+            imageSize = int(imageSizeY * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
 
         contentImage = Image.new( "RGB", imageSize, "#" + backgroundColor )
         contentImageDraw = ImageDraw.Draw(contentImage)
@@ -347,12 +347,12 @@ class PixelText:
             imageSizeY = int(sqrtContentLength[1])
 
 
-        if aspectWidth - aspectHeight == 0:
+        if imageSizeX - imageSizeY == 0:
             imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth)
-        elif aspectWidth - aspectHeight > 0:
+        elif imageSizeX - imageSizeY > 0:
             imageSize = int(imageSizeX * aspectWidth/aspectHeight) + 1, int(imageSizeY * aspectHeight/aspectWidth)
-        elif aspectWidth - aspectHeight < 0:
-            imageSize = int(imageSizeX * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
+        elif imageSizeX - aspectHeight < 0:
+            imageSize = int(imageSizeY * aspectWidth/aspectHeight), int(imageSizeY * aspectHeight/aspectWidth) + 1
 
         contentImage = Image.new( "RGB", imageSize, "#" + backgroundColor )
         contentImageDraw = ImageDraw.Draw(contentImage)
@@ -389,10 +389,9 @@ class PixelText:
                         j = j + 1
                         k = k + 1
                         l = 0
+
                 n = n - 1
-
         
-
         for word in self.contentList:      
             try:
                 if( self.colorMap[word] != "" ):
